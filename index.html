@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Appointment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .appointment {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .appointment h3 {
+            margin-top: 0;
+            color: #555;
+        }
+
+        .appointment p {
+            margin: 5px 0;
+            color: #777;
+        }
+
+        .appointment button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .cancel-btn {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .reschedule-btn {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .reschedule-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .reschedule-modal h3 {
+            margin-top: 0;
+        }
+
+        .reschedule-modal input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .modal-close {
+            background-color: #555;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Your Appointments</h2>
+        <div class="appointment" data-appointment-id="1">
+            <h3>Dr. Smith</h3>
+            <p>Date: <span class="appointment-date">2024-09-01</span></p>
+            <p>Time: <span class="appointment-time">10:00 AM</span></p>
+            <button class="cancel-btn" onclick="cancelAppointment(1)">Cancel</button>
+            <button class="reschedule-btn" onclick="openRescheduleModal(1)">Reschedule</button>
+        </div>
+        <div class="appointment" data-appointment-id="2">
+            <h3>Dr. Johnson</h3>
+            <p>Date: <span class="appointment-date">2024-09-02</span></p>
+            <p>Time: <span class="appointment-time">11:00 AM</span></p>
+            <button class="cancel-btn" onclick="cancelAppointment(2)">Cancel</button>
+            <button class="reschedule-btn" onclick="openRescheduleModal(2)">Reschedule</button>
+        </div>
+        
+    </div>
+
+    <div class="reschedule-modal" id="rescheduleModal">
+        <h3>Reschedule Appointment</h3>
+        <input type="date" id="rescheduleDate" required>
+        <input type="time" id="rescheduleTime" required>
+        <button class="modal-close" onclick="rescheduleAppointment()">Save</button>
+        <button class="modal-close" onclick="closeRescheduleModal()">Close</button>
+    </div>
+
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+
+    <script>
+        let selectedAppointmentId = null;
+
+        function cancelAppointment(id) {
+            const appointment = document.querySelector(`.appointment[data-appointment-id="${id}"]`);
+            if (confirm("Are you sure you want to cancel this appointment?")) {
+                appointment.remove();
+                alert("Appointment canceled.");
+            }
+        }
+
+        function openRescheduleModal(id) {
+            selectedAppointmentId = id;
+            document.getElementById('rescheduleModal').style.display = 'block';
+            document.getElementById('modalBackdrop').style.display = 'block';
+        }
+
+        function closeRescheduleModal() {
+            selectedAppointmentId = null;
+            document.getElementById('rescheduleModal').style.display = 'none';
+            document.getElementById('modalBackdrop').style.display = 'none';
+        }
+
+        function rescheduleAppointment() {
+            const newDate = document.getElementById('rescheduleDate').value;
+            const newTime = document.getElementById('rescheduleTime').value;
+
+            if (newDate && newTime) {
+                const appointment = document.querySelector(`.appointment[data-appointment-id="${selectedAppointmentId}"]`);
+                appointment.querySelector('.appointment-date').textContent = newDate;
+                appointment.querySelector('.appointment-time').textContent = newTime;
+
+                closeRescheduleModal();
+                alert("Appointment rescheduled.");
+            } else {
+                alert("Please select a date and time.");
+            }
+        }
+    </script>
+</body>
+
+</html>
